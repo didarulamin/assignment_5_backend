@@ -14,6 +14,6 @@ const bookSchema = new mongoose.Schema({
   Reviews: [reviewSchema],
 });
 
-const BooksModel = mongoose.model("book", bookSchema);
+const BooksModel = mongoose.model("books", bookSchema);
 
 export default BooksModel;

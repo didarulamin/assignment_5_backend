@@ -6,4 +6,4 @@ connectdb()
       console.log("Server is running on port 5003");
     });
   })
-  .catch();
+  .catch((error) => console.error("connection error"));

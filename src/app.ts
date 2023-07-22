@@ -4,6 +4,7 @@ import cors from "cors";
 import BooksModel from "./model/books";
 import mongoose from "mongoose";
 import config from "./config";
+import { title } from "process";
 
 dotenv.config();
 
@@ -36,6 +37,40 @@ app.get("/allbooks", async (req: Request, res: Response) => {
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch books." });
+  }
+});
+app.post("/delete/:title", async (req: Request, res: Response) => {
+  try {
+    const title = req.params.title;
+    const deletedBook = await BooksModel.findOneAndRemove({ Title: title });
+    if (!deletedBook) {
+      return res.status(404).json({ message: "Book not found." });
+    }
+    res.json({ message: "Book deleted successfully.", deletedBook });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting the book." });
+  }
+});
+
+// POST - Add a new book
+app.post("/addbook", async (req: Request, res: Response) => {
+  // const { Title, Author, Genre, PublishedYear, Reviews } = req.body; // Assuming you have these fields, adjust as per your book model
+
+  try {
+    const newBook = new BooksModel({
+      /*    Title,
+      Author,
+      Genre,
+      PublishedYear,
+      Reviews, */
+      // Add other book properties here
+      ...req.body,
+    });
+    console.log(newBook);
+    const savedBook = await newBook.save();
+    res.json({ message: "Book added successfully.", book: savedBook });
+  } catch (err) {
+    res.status(500).json({ message: "Error adding the book." });
   }
 });
 
